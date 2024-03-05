@@ -47,11 +47,10 @@ so_brand = st.text_input('Marca del SO', 'Windows')
 ghz = st.number_input('GHz del CPU', min_value=0.1, max_value=5.0, value=2.5)
 has_ssd = st.selectbox('¿Tiene SSD?', ['No', 'Sí'])
 processor_brand = st.text_input('Marca del Procesador', 'Intel')
-memory_gb = st.number_input('Memory (GB)', min_value=1, max_value=1024, value=128)
 
 # Manejo de excepciones para la entrada de pulgadas
 try:
-    inches = st.number_input('Inches', min_value=10, max_value=20, value=15.0)
+    inches = st.number_input('Inches', min_value=10.0, max_value=20.0, value=15.0)
 except Exception as e_input:
     st.error(f'Error en la entrada de pulgadas: {e_input}')
     inches = 15.0
@@ -63,20 +62,18 @@ has_ssd = 1 if has_ssd == 'Sí' else 0
 processor_brand = get_processor_brand(processor_brand)
 so_brand = get_processor_SO(so_brand)
 
-# Botón para realizar predicción
-if st.button('Predecir Precio'):
-    # Crear DataFrame con las entradas
-    input_data = pd.DataFrame([[ram, typename_gaming, weight, typename_notebook, so_brand, ghz, has_ssd, processor_brand, memory_gb, inches]],
-                    columns=['Ram', 'TypeName_Gaming', 'Weight', 'TypeName_Notebook', 'SO_brand', 'GHz', 'has_SSD', 'Processor_brand', 'Memory_GB', 'Inches'])
+# Crear DataFrame con las entradas
+input_data = pd.DataFrame([[ram, typename_gaming, weight, typename_notebook, so_brand, ghz, has_ssd, processor_brand, inches]],
+                columns=['Ram', 'TypeName_Gaming', 'Weight', 'TypeName_Notebook', 'SO_brand', 'GHz', 'has_SSD', 'Processor_brand', 'Inches'])
 
-    # Estandarización de las características
-    scaler = StandardScaler()
-    input_scaled = scaler.fit_transform(input_data)
+# Estandarización de las características
+scaler = StandardScaler()
+input_scaled = scaler.fit_transform(input_data)
 
-    # Realizar predicción
-    try:
-        prediction = modelo.predict(input_scaled)
-        # Mostrar predicción
-        st.write(f'Precio predecido: {prediction[0]:.2f} euros')
-    except Exception as e_prediction:
-        st.error(f'Error en la predicción: {e_prediction}')
+# Realizar predicción
+try:
+    prediction = modelo.predict(input_scaled)
+    # Mostrar predicción
+    st.write(f'Precio predecido: {prediction[0]:.2f} euros')
+except Exception as e_prediction:
+    st.error(f'Error en la predicción: {e_prediction}')
