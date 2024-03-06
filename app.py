@@ -48,6 +48,10 @@ if st.button('Predecir Precio'):
     # Unir el DataFrame codificado con el resto de las características numéricas
     input_data = pd.concat([input_data[['Ram', 'Weight', 'GHz', 'Memory_GB', 'ScreenResolution', 'Inches']], input_encoded_df], axis=1)
 
+    # Asegurarse de que todas las características estén presentes
+    expected_features = ['Ram', 'Weight', 'GHz', 'Memory_GB', 'ScreenResolution', 'Inches'] + list(input_encoded_df.columns)
+    input_data = input_data.reindex(columns=expected_features, fill_value=0)
+
     # Estandarización de las características
     scaler = StandardScaler()
 
