@@ -22,12 +22,15 @@ has_ssd = st.selectbox('¿Tiene SSD?', ['No', 'Sí'])
 processor_brand = st.selectbox('Marca del Procesador', ['1', '2', '3', '4', '5'])  # Reemplaza con las marcas reales
 memory_gb = st.number_input('Memoria (GB)', min_value=1, max_value=1024, value=128)
 screen_resolution = st.number_input('Resolución de Pantalla', min_value=800, max_value=10000000, value=4096000)
-inches = st.number_input('Tamaño de Pantalla (pulgadas)', min_value=10, max_value=20, value=13.3)
 
-# Convertir entradas a formato numérico
-type_gaming = 1 if type_gaming == 'Sí' else 0
-type_notebook = 1 if type_notebook == 'Sí' else 0
-has_ssd = 1 if has_ssd == 'Sí' else 0
+# Control de entrada para el tamaño de la pantalla en pulgadas
+inches = st.text_input('Tamaño de Pantalla (pulgadas)', '13.3')
+
+# Convertir a formato numérico si es posible
+try:
+    inches = float(inches)
+except ValueError:
+    st.error('Por favor, ingrese un valor numérico para el tamaño de pantalla.')
 
 # Botón para realizar predicción
 if st.button('Predecir Precio'):
@@ -43,4 +46,4 @@ if st.button('Predecir Precio'):
     prediction = modelo.predict(input_scaled)
 
     # Mostrar predicción
-    st.write(f'Precio predecido: {prediction[0]:.2f} ')
+    st.write(f'Precio predecido: {prediction[0]:.2f} euros')
