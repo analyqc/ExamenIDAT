@@ -38,12 +38,17 @@ if st.button('Predecir Precio'):
     input_data = pd.DataFrame([[ram, type_gaming, weight, type_notebook, so_brand, ghz, has_ssd, processor_brand, memory_gb, screen_resolution, inches]],
                     columns=['Ram', 'TypeName_Gaming', 'Weight', 'TypeName_Notebook', 'SO_brand', 'GHz', 'has_SSD', 'Processor_brand', 'Memory_GB', 'ScreenResolution', 'Inches'])
 
+    # Imprimir los tipos de datos de cada columna en input_data
+    st.write("Tipos de datos de cada columna en input_data:")
+    st.write(input_data.dtypes)
+
     # Estandarización de las características
     scaler = StandardScaler()
-    input_scaled = scaler.fit_transform(input_data)
 
     # Realizar predicción
-    prediction = modelo.predict(input_scaled)
-
-    # Mostrar predicción
-    st.write(f'Precio predecido: {prediction[0]:.2f} euros')
+    try:
+        input_scaled = scaler.fit_transform(input_data)
+        prediction = modelo.predict(input_scaled)
+        st.write(f'Precio predecido: {prediction[0]:.2f} euros')
+    except ValueError as e:
+        st.error(f'Error al estandarizar los datos: {e}')
