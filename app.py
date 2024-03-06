@@ -13,18 +13,21 @@ st.title('Predicción de Precios de Laptops')
 
 # Controles de entrada para las características
 ram = st.number_input('RAM (GB)', min_value=1, max_value=64, value=8)
-type_gaming = st.selectbox('¿Es Gaming?', [0, 1])  # Cambiado a 0 y 1
+type_gaming = st.selectbox('¿Es Gaming?', [0, 1])
 weight = st.number_input('Peso', min_value=0.5, max_value=5.0, value=1.5)
-type_notebook = st.selectbox('¿Es Notebook?', [0, 1])  # Cambiado a 0 y 1
-so_brand = st.selectbox('Marca del Sistema Operativo', [1, 2, 3, 4, 5])  # Cambiado a valores numéricos
+type_notebook = st.selectbox('¿Es Notebook?', [0, 1])
+so_brand = st.selectbox('Marca del Sistema Operativo', [1, 2, 3, 4, 5])
 ghz = st.number_input('GHz del CPU', min_value=0.1, max_value=5.0, value=2.5)
-has_ssd = st.selectbox('¿Tiene SSD?', [0, 1])  # Cambiado a 0 y 1
-processor_brand = st.selectbox('Marca del Procesador', [1, 2, 3, 4, 5])  # Cambiado a valores numéricos
+has_ssd = st.selectbox('¿Tiene SSD?', [0, 1])
+processor_brand = st.selectbox('Marca del Procesador', [1, 2, 3, 4, 5])
 memory_gb = st.number_input('Memoria (GB)', min_value=1, max_value=1024, value=128)
 screen_resolution = st.number_input('Resolución de Pantalla', min_value=800, max_value=10000000, value=4096000)
 
 # Control de entrada para el tamaño de la pantalla en pulgadas
-inches = st.number_input('Tamaño de Pantalla (pulgadas)', min_value=10, max_value=20, value=13.3)
+try:
+    inches = float(st.text_input('Tamaño de Pantalla (pulgadas)', '13.3'))
+except ValueError:
+    st.error('Por favor, ingrese un valor numérico para el tamaño de pantalla.')
 
 # Botón para realizar predicción
 if st.button('Predecir Precio'):
