@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
 # Cargar el modelo entrenado
 with open('modelo_optimizado.pkl', 'rb') as file:
@@ -38,9 +38,15 @@ if st.button('Predecir Precio'):
     input_data = pd.DataFrame([[ram, type_gaming, weight, type_notebook, so_brand, ghz, has_ssd, processor_brand, memory_gb, screen_resolution, inches]],
                     columns=['Ram', 'TypeName_Gaming', 'Weight', 'TypeName_Notebook', 'SO_brand', 'GHz', 'has_SSD', 'Processor_brand', 'Memory_GB', 'ScreenResolution', 'Inches'])
 
-    # Imprimir los tipos de datos de cada columna en input_data
-    st.write("Tipos de datos de cada columna en input_data:")
-    st.write(input_data.dtypes)
+    # Codificación One-Hot para las variables categóricas
+    encoder = OneHotEncoder(drop='first', sparse=False)
+    input_encoded = encoder.fit_transform(input_data[['TypeName_Gaming', 'TypeName_Notebook', 'SO_brand', 'has_SSD', 'Processor_brand']])
+
+    # Crear DataFrame con las variables codificadas
+    input_encoded_df = pd.DataFrame(input_encoded, columns=encoder.get_feature_names(['TypeName_Gaming', 'TypeName_Notebook', 'SO_brand', 'has_SSD', 'Processor_brand']))
+
+    # Unir el DataFrame codificado con el resto de las características numéricas
+    input_data = pd.concat([input_data[['Ram', 'Weight', 'GHz', 'Memory_GB', 'ScreenResolution', 'Inches']], input_encoded_df], axis=1)
 
     # Estandarización de las características
     scaler = StandardScaler()
